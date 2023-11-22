@@ -280,6 +280,9 @@ compile_package_pm: payload .luggage.pkg.plist modify_packageroot
 		--version ${PACKAGE_VERSION} \
 		${PM_EXTRA_ARGS} --out ${PAYLOAD_D}/${PACKAGE_FILE}
 	sudo ${CP} ${PAYLOAD_D}/${PACKAGE_FILE} ${OUTPUT_D}/
+ifneq ($(SUDO_USER), '')
+	sudo /usr/sbin/chown $(SUDO_USER) ${OUTPUT_D}/${PACKAGE_FILE}
+endif
 
 compile_package_pb: payload .luggage.pkg.component.plist kill_relocate modify_packageroot
 	@-sudo rm -fr ${PAYLOAD_D}/${PACKAGE_FILE}
@@ -293,6 +296,9 @@ compile_package_pb: payload .luggage.pkg.component.plist kill_relocate modify_pa
 		${PB_EXTRA_ARGS} \
 		${PAYLOAD_D}/${PACKAGE_FILE}
 	sudo ${CP} ${PAYLOAD_D}/${PACKAGE_FILE} ${OUTPUT_D}/
+ifneq ($(SUDO_USER), '')
+	sudo /usr/sbin/chown $(SUDO_USER) ${OUTPUT_D}/${PACKAGE_FILE}
+endif
 
 create_flatdist:
 	@-sudo rm -fr ${PAYLOAD_D}/${PKG_DIST}
@@ -301,6 +307,9 @@ create_flatdist:
 	--package ${PAYLOAD_D}/${PACKAGE_FILE} \
 	${PAYLOAD_D}/${PKG_DIST}
 	sudo ${CP} -R ${PAYLOAD_D}/${PKG_DIST} ${OUTPUT_D}/
+ifneq ($(SUDO_USER), '')
+	sudo /usr/sbin/chown -R $(SUDO_USER) ${OUTPUT_D}/${PKG_DIST}
+endif
 
 ifeq (${USE_PKGBUILD}, 0)
 compile_package: compile_package_pm ;

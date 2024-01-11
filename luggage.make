@@ -23,7 +23,7 @@ export BUILD_DATE=$(shell date -u "+%Y-%m-%dT%H:%M:%SZ")
 PLIST_FLAVOR=plist
 PACKAGE_PLIST=.package.plist
 
-PACKAGE_TARGET_OS=10.4
+PACKAGE_TARGET_OS=10.10
 PLIST_TEMPLATE=prototype.plist
 PLIST_PATH=/usr/local/share/luggage/prototype.plist
 TITLE=CHANGE_ME
@@ -84,7 +84,7 @@ BUILD_D=${SCRATCH_D}/build
 # package's Makefile.
 
 PM_EXTRA_ARGS=--verbose --no-recommend --no-relocate
-PM_FILTER=--filter "/CVS$$" --filter "/\.svn$$" --filter "/\.cvsignore$$" --filter "/\.cvspass$$" --filter "/(\._)?\.DS_Store$$" --filter "/\.git$$" --filter "/\.gitignore$$"
+PM_FILTER=--filter "/\.svn$$" --filter "/CVS$$" --filter "/\.cvsignore$$" --filter "/\.cvspass$$"  --filter "/\.git$$" --filter "/\.gitignore$$" --filter "/(\._)?\.DS_Store$$" --filter "/\.hg$$"
 
 # package build parameters
 #
@@ -92,11 +92,16 @@ PM_FILTER=--filter "/CVS$$" --filter "/\.svn$$" --filter "/\.cvsignore$$" --filt
 
 PB_EXTRA_ARGS=--ownership preserve --quiet
 
+# pkgbuild can use better compression, but you have to set a minimum OS version
+
+ifneq (${PACKAGE_TARGET_OS}, '')
+PB_EXTRA_ARGS+= --min-os-version ${PACKAGE_TARGET_OS} --compression latest
+endif
 
 # pkgbuild can build payload free packages, but you have to say if you want one.
 
 ifeq (${NO_PAYLOAD}, 1)
-PB_EXTRA_ARGS+=" --nopayload"
+PB_EXTRA_ARGS+= --nopayload
 endif
 
 # Set to false if you want your package to install to volumes other than the boot volume

@@ -914,14 +914,6 @@ pack-ppd-%: % l_PPDs
 	@sudo ${INSTALL} -m 664 -g admin -o root "${<}" ${WORK_D}/Library/Printers/PPDs/Contents/Resources
 
 pack-script-pb-%: % scriptdir
-	@echo "******************************************************************"
-	@echo ""
-	@echo "Using ${PKGBUILD}, make sure scripts are"
-	@echo "named preinstall/postinstall"
-	@echo ""
-	@echo "Also check your pack-script-* stanzas in PAYLOAD"
-	@echo ""
-	@echo "******************************************************************"
 	@sudo ${INSTALL} -o root -g wheel -m 755 "${<}" ${SCRIPT_D}
 
 pack-script-pm-%: % scriptdir

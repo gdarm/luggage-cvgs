@@ -132,7 +132,7 @@ DMG_FORMAT_CODE=UDZO
 ZLIB_LEVEL=9
 DMG_FORMAT_OPTION=-imagekey zlib-level=${ZLIB_LEVEL}
 DMG_FORMAT=${DMG_FORMAT_CODE} ${DMG_FORMAT_OPTION}
-DMG_FS="HFS+"
+DMG_FS="APFS"
 
 # Set .PHONY declarations so things don't break if someone has files in
 # their workdir with the same names as our special stanzas
@@ -232,6 +232,9 @@ dmg: scratchdir outputdir compile_package
 		-format ${DMG_FORMAT} \
 		${SCRATCH_D}/${DMG_NAME}
 	sudo ${CP} ${SCRATCH_D}/${DMG_NAME} ${OUTPUT_D}/
+ifneq ($(SUDO_USER), '')
+	sudo /usr/sbin/chown $(SUDO_USER) ${OUTPUT_D}/${DMG_NAME}
+endif
 
 zip: scratchdir compile_package
 	@echo "Zipping ${PACKAGE_NAME}..."
@@ -241,6 +244,9 @@ zip: scratchdir compile_package
 		${PAYLOAD_D} \
 		${SCRATCH_D}/${ZIP_NAME}
 	sudo ${CP} ${SCRATCH_D}/${ZIP_NAME} ${OUTPUT_D}/
+ifneq ($(SUDO_USER), '')
+	sudo /usr/sbin/chown $(SUDO_USER) ${OUTPUT_D}/${ZIP_NAME}
+endif
 
 modify_packageroot:
 	@echo "If you need to override permissions or ownerships, override modify_packageroot in your Makefile"
